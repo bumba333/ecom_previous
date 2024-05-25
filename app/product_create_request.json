@@ -1,0 +1,59 @@
+{
+	"id": "product_1",
+	"active": true,
+	"name": "ABCD",
+	"brandName": "Gucci",
+	"featured": true,
+	"publishDate": "20/03/2023",
+	"itemsSold": 50,
+	"reviews": 360,
+	"reviewAverage": 4.6,
+    "images": [
+		"img/apple-laptop.jpg"
+    ],
+	"featuredImages": [
+		"img/apple-laptop.jpg"
+	],
+	"regularPrice": 100,
+	"salePrice": 90,
+	"description": "Flipkart Apple iBook is the best in class computer for your professional and personal work.",
+	"shortDescription": "Flipkart Apple iBook is the best in class computer for your professional and personal work.",
+	"shippingSizeAndWeight": {
+		"dimensions": [
+			"300 mm (w)",
+			"300 mm (h)",
+			"12.4 mm (d)"
+		],
+        "weight": 1250.0
+    },
+	"categories": [
+		"saree"
+    ],
+	"tags": [
+		"Poila Baishak"
+    ],
+	"productSize": [
+        "S",
+		"M",
+		"XL"
+    ],
+	"color": "",
+	"variableProductId": [
+        "product_2",
+		"product_3",
+    ],
+	"inventory": {
+        "sku": "",
+		"stockQuantity": 100,
+		"lowStockThreshold": 5,
+		"soldIndividually": false
+    },
+	"linkedProducts": {
+        "upSellProduct": [
+			"product_6", "product_7"
+		],
+		"crossSellProduct": [
+			"product_36", "product_24"
+		]
+    }
+}

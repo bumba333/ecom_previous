@@ -1,0 +1,60 @@
+Open the Command Prompt and navigate to the bin folder of your MySQL Server installation directory. Then connect to the server using the mysql -u root -p command. Enter the password and execute the SHOW DATABASES
+db pass : Spider@1
+
+
+sign up
+{
+  "first_name": "Amitava",
+  "last_name": "Jana",
+  "email": "a@a.com",
+  "password": "password",
+  "password_confirmation": "password",
+  "contact_number": "9876543210",
+  "gender": "male",
+  "address": "abcd"
+}
+
+Login
+{
+  "email": "a@a.com",
+  "password": "password"
+}
+
+Product 
+{
+    "description": 
+    "price": 
+    "product_category_id": 
+    "product_sub_category_id": 
+}
+{
+  "title": "Men's Running T-Shirt",
+  "description": "A comfortable and breathable t-shirt designed for running.",
+  "price": 29.99,
+  "image": "https://example.com/images/mens-running-tshirt.jpg",
+  "categories": [1, 3],
+  "subcategories": [2, 5],
+  "brand": "Nike",
+  "quantity": 100,
+  "status": "in stock",
+  "meta_title": "Men's Running T-Shirt - Nike",
+  "meta_description": "Shop for Men's Running T-Shirt by Nike. Comfortable and breathable design for runners."
+}
+
+CATEGORY
+	{
+    "id": 1,
+    "name": "Men's Clothing", 
+    "status":  "draft"
+}
+
+
+SERACH 
+{
+  "q": "vests",
+  "category": "",
+  "subcategory": "",
+  "brand": "",
+  "page": 1,
+  "limit": 10
+}

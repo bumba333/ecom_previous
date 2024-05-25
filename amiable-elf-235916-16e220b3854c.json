@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "amiable-elf-235916",
+  "private_key_id": "16e220b3854cddbec51fa33d98a0fadc17bceccb",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQDwPmtmTvxRS2K6\namGJldcDa/xo7oLjyOsF8IhS8x79L/T6otRzIfJvrm4SXUcXixtNueFgQtniGc/W\nU1HINP45sMkfG8u6+HQL/flIAMWNev7nUM76osjMdDqqP7YAexAhV95+Z3JnP1l6\nMRABCh50mAkM3VdzVGQApwSdlXxZs9rcZ+7w/RlCMbXSZZPmOpPqAd93m7wo2keD\nqbtHUEJumk1BMEjKFLq7miuB3ATd3if5QjRBuqMq54o0VWElHf8VWIpTeA31e9/f\ndoKpWKdebZSTOOKFMwrRxVue/ZEGXC4tlVz/wzL+978jnRFJX3xXvP7aKzAi5y08\n521rLzmvAgMBAAECggEAKH9lLFxhNTT/ggwfwAklsxp3dJrMLqi2UYx/9nesQCLe\n6YccSAIvc3sUa/0UWFgnNJ2Ca+8o+m++dNMbxKOGPWRbKubNG4n5SfI4nNYgdx6G\nLKkXEvHw5mIrZ3qQ7BjSmcRNqcI3a0cnBq2RlJNHmgDs+aGwNa1CpEeDRCsoSJhw\nzcwBmED7IgPH4MbIfVP5chUwKpAEDa1Ou85ecjZ6ioDlrQTUFs7c9jmowfaArCgL\nHLJZoc75RkCq5HefOw1u3VmnjhncFhByqY6i+o2pTMtFvrY3uq1r3zTobIC+AWtr\noj8tTV88AGvoFYI/cS8YPBne2rNsH7iT4XkoYNimiQKBgQD6JXbz7kTKLN24yxGP\ndQgzYwPdg15OAQQLOdwNa0E1XBsGAC9ckiqPiINkayBCWcFo96Djp6qKnqejBsL1\nKDpduFDm8lgLodi4L8YDNWZpJ80d1Unpy/b/lnLgOnv1dgShEWTEGMYwbneGcgrv\n7XdZXCeNXASAVNtbsSlW68IC6QKBgQD13aHq+w9EV8cW6UIHeafYM4J08U3tMf1d\nV2o9SO/yjTKnXU8U5RXL70hv5hl9eCxhplSp5Nydq2gXuLwspC4wtuqJGH4HIA3f\nGQl65SQ34G81nZLfiY2lMByaP8Md2S/d5dHO8JewwudOD5Ajexug0T6vmAdQpJvY\nivchfjuI1wKBgQC36YOjpLL+0i3SB7tJdgopfcsBuexD/Yszlb6sPwcabDWSG+C2\nduDD1uKDmh+FqOgCfM3VkxhYAn3N5tK/3GvNLA6PPe5t3vivsrAq+7/n4FN2c7J8\nKnHXSI39PgKVXcfZhChJ5M0SHqXSO1a/QCBXmuGZlOXaVIlSyNZUCdICwQKBgQCm\n6gwexsqajyzt9PWKtaCpOm76jUdmHGXxlILfkEC13f3heYtSmCOwC4aV0RTFBWy7\n7nvTyzerIs7MK/I0LFHfaI7Y+/OzSqOgLhMth5qLBKb7Mzqe33d2Ca+hWGBSRzwj\n3P4PC28v5WG6sP4d2FntV6DC/OcabGYRIGaeKmCoiQKBgQDVETl2CU/ZIsQlKwra\nVFApz4wMw5D7IHj0UPHdZY+ZscDrHnB8ZEEtnAAEzB+B8G9PLurMWQAX2ZLXNsG4\nbXbHiYG9kh+T+lCQTDNOmyJpeOQLDxuP6SfbP/eTbWslCK/OMkV/vC+xq+8c/Xwe\nwLJoqWZIfQ7iTQ+wwzEg8cWJhA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "bauchar-service-account@amiable-elf-235916.iam.gserviceaccount.com",
+  "client_id": "109103545441340017320",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bauchar-service-account%40amiable-elf-235916.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
