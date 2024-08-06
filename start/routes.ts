@@ -67,10 +67,10 @@ Route.group(() => {
     'auth',
     'checkRole:admin, vendor',
   ])
-  Route.post('/variations/images/:id', 'ImagesController.uploadProductVariationImages').middleware([
-    'auth',
-    'checkRole:admin, vendor',
-  ])
+  Route.post(
+    '/variations/images/:id',
+    'ImagesController.uploadProductVariationImagesCLDNRY'
+  ).middleware(['auth', 'checkRole:admin, vendor'])
   Route.put('/:id', 'ProductsController.update').middleware(['auth', 'checkRole:admin, vendor'])
   Route.post('/search', 'ProductsController.search')
   Route.post('/uploadImages', 'ProductsController.uploadImages').middleware([

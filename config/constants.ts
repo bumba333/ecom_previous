@@ -1,3 +1,6 @@
 export const GCS_BUCKET_NAME = 'bauchar_bucket'
 export const GCS_BUCKET_FOLDER = 'ecom'
 export const GCS_BUCKET_KEY_FILE_NAME = 'amiable-elf-235916-16e220b3854c.json'
+export const CLOUDINARY_CLOUD_NAME = process.env.CLOUDINARY_CLOUD_NAME || ''
+export const CLOUDINARY_API_KEY = process.env.CLOUDINARY_API_KEY || ''
+export const CLOUDINARY_API_SECRET = process.env.CLOUDINARY_API_SECRET || ''
