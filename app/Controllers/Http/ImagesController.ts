@@ -493,6 +493,7 @@ export default class ImagesController {
     }
   }
 
+  // similar methods for cloudinary
   public async uploadProductVariationImagesCLDNRY({
     params,
     request,
@@ -547,6 +548,69 @@ export default class ImagesController {
       return response.status(201).json({
         status: 'Images uploaded successfully',
         productVariation: productVariation.toJSON(),
+      })
+    } catch (error) {
+      // Handle any errors that might occur during the file upload or database operations
+      console.error('Error uploading images:', error)
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while uploading images.',
+        error: error.message,
+      })
+    }
+  }
+
+  // this method is for uploading product variation images to cloudinary
+  public async uploadImagesCLDNRY({ params, request, response }: HttpContextContract) {
+    try {
+      const imageFiles = request.files('images')
+      const productVariationId = params.id
+      const productVariation = await ProductVariation.findOrFail(productVariationId)
+
+      if (!productVariation) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Product variation with specified id does not exist',
+        })
+      }
+
+      if (imageFiles && imageFiles.length > 0) {
+        await Promise.all(
+          imageFiles.map(async (image) => {
+            // Generate a unique file name to avoid overwriting
+            const fileName = `${new Date().getTime()}-${image.clientName}`
+
+            try {
+              // Check if image.tmpPath is defined
+              if (!image.tmpPath) {
+                throw new Error('Temporary path for the image is undefined')
+              }
+              // Upload the image to Cloudinary
+              const result = await cloudinary.v2.uploader.upload(image.tmpPath, {
+                public_id: fileName,
+                folder: 'product_images',
+              })
+
+              // Create a new Image record in the database and link it to the product variation
+              await Image.create({
+                fileName: fileName,
+                productVariationId: productVariationId,
+                url: result.secure_url,
+              })
+            } catch (error) {
+              console.error('Error uploading file:', error)
+              throw error // Rethrow the error to handle it in the catch block
+            }
+          })
+        )
+      }
+
+      // Load associated images for the product variation
+      await productVariation.load('images')
+
+      return response.status(201).json({
+        status: 'Images uploaded successfully',
+        productVariation: productVariation,
       })
     } catch (error) {
       // Handle any errors that might occur during the file upload or database operations

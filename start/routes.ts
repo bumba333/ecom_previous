@@ -110,9 +110,10 @@ Route.group(() => {
 
 //IMAGES ROUTES
 Route.group(() => {
-  Route.post('/products/upload/image/variation/:id', 'ImagesController.uploadImages').middleware(
-    'auth'
-  )
+  Route.post(
+    '/products/upload/image/variation/:id',
+    'ImagesController.uploadImagesCLDNRY'
+  ).middleware('auth')
   Route.post('/products/update/image/:id', 'ImagesController.updateImages').middleware('auth')
   Route.post('/products/delete/image/:id', 'ImagesController.deleteImages').middleware('auth')
   // Upload category images
