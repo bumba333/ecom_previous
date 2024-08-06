@@ -622,4 +622,413 @@ export default class ImagesController {
       })
     }
   }
+
+  public async updateImagesCLDNRY({ params, request, response }: HttpContextContract) {
+    try {
+      const { id } = params
+      const image = await Image.findOrFail(id)
+
+      if (!image) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Image with specified id does not exist',
+        })
+      }
+
+      // Parse the updated image details from the request body
+      const { fileName, description, newImage } = request.only([
+        'fileName',
+        'description',
+        'newImage',
+      ])
+
+      // If a new image is provided, upload it to Cloudinary
+      if (newImage) {
+        try {
+          // Generate a unique file name to avoid overwriting
+          const newFileName = `${new Date().getTime()}-${newImage.clientName}`
+
+          // Upload the new image to Cloudinary
+          const result = await cloudinary.v2.uploader.upload(newImage.tmpPath, {
+            public_id: newFileName,
+            folder: 'product_images',
+          })
+
+          // Update the image URL and fileName
+          image.fileName = newFileName
+          image.url = result.secure_url
+        } catch (error) {
+          console.error('Error uploading new image:', error)
+          throw error // Rethrow the error to handle it in the catch block
+        }
+      }
+
+      // Update the image details
+      image.fileName = fileName || image.fileName
+      image.description = description || image.description
+
+      // Save the updated image record
+      await image.save()
+
+      return response.status(200).json({
+        status: 'Image updated successfully',
+        image: image,
+      })
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while updating the image.',
+        error: error.message,
+      })
+    }
+  }
+
+  public async deleteImagesCLDNRY({ params, response }: HttpContextContract) {
+    try {
+      const { id } = params
+      const image = await Image.findOrFail(id)
+
+      if (!image) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Image with specified id does not exist',
+        })
+      }
+
+      // Extract the public ID of the image from the fileName
+      const publicId = image.fileName.split('/').pop()!.split('.')[0]
+
+      try {
+        // Delete the image file from Cloudinary
+        await cloudinary.v2.uploader.destroy(`product_images/${publicId}`)
+      } catch (error) {
+        console.error('Error deleting file from Cloudinary:', error)
+        throw error // Rethrow the error to handle it in the catch block
+      }
+
+      // Delete the image record from the database
+      await image.delete()
+
+      return response.status(200).json({
+        status: 'Image deleted successfully',
+      })
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while deleting the image.',
+        error: error.message,
+      })
+    }
+  }
+
+  public async uploadCategoryImagesCLDNRY({ params, request, response }: HttpContextContract) {
+    try {
+      const imageFiles = request.files('images')
+      const categoryId = params.id
+      const category = await Category.findOrFail(categoryId)
+
+      if (!category) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Category with specified id does not exist',
+        })
+      }
+
+      if (imageFiles && imageFiles.length > 0) {
+        await Promise.all(
+          imageFiles.map(async (image) => {
+            // Generate a unique file name to avoid overwriting
+            const fileName = `${new Date().getTime()}-${image.clientName}`
+
+            try {
+              // Check if image.tmpPath is defined
+              if (!image.tmpPath) {
+                throw new Error('Temporary path for the image is undefined')
+              }
+              // Upload the image to Cloudinary
+              const result = await cloudinary.v2.uploader.upload(image.tmpPath, {
+                public_id: fileName,
+                folder: 'category_images',
+              })
+
+              // Create a new CategoryImage record in the database and link it to the category
+              await CategoryImage.create({
+                fileName: fileName,
+                categoryId: categoryId,
+                imageUrl: result.secure_url,
+              })
+            } catch (error) {
+              console.error('Error uploading file:', error)
+              throw error // Rethrow the error to handle it in the catch block
+            }
+          })
+        )
+      }
+
+      // Load associated images for the category
+      await category.load('images')
+
+      return response.status(201).json({
+        status: 'Images uploaded successfully',
+        category: category,
+      })
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while uploading images.',
+        error: error.message,
+      })
+    }
+  }
+
+  public async updateCategoryImagesCLDNRY({ params, request, response }: HttpContextContract) {
+    try {
+      const { id } = params
+      const image = await CategoryImage.findOrFail(id)
+
+      if (!image) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Image with specified id does not exist',
+        })
+      }
+
+      // Parse the updated image details from the request body
+      const { fileName, newImage } = request.only(['fileName', 'description', 'newImage'])
+
+      // If a new image is provided, upload it to Cloudinary
+      if (newImage) {
+        try {
+          // Generate a unique file name to avoid overwriting
+          const newFileName = `${new Date().getTime()}-${newImage.clientName}`
+
+          // Upload the new image to Cloudinary
+          const result = await cloudinary.v2.uploader.upload(newImage.tmpPath, {
+            public_id: newFileName,
+            folder: 'category_images',
+          })
+
+          // Update the image URL and fileName
+          image.fileName = newFileName
+          image.imageUrl = result.secure_url
+        } catch (error) {
+          console.error('Error uploading new image:', error)
+          throw error // Rethrow the error to handle it in the catch block
+        }
+      }
+
+      // Update the image details
+      image.fileName = fileName || image.fileName
+
+      // Save the updated image record
+      await image.save()
+
+      return response.status(200).json({
+        status: 'Image updated successfully',
+        image: image,
+      })
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while updating the image.',
+        error: error.message,
+      })
+    }
+  }
+
+  public async deleteCategoryImagesCLDNRY({ params, response }: HttpContextContract) {
+    try {
+      const { id } = params
+      const image = await CategoryImage.findOrFail(id)
+
+      if (!image) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Image with specified id does not exist',
+        })
+      }
+
+      // Extract the public ID of the image from the fileName
+      const publicId = image.fileName.split('/').pop()!.split('.')[0]
+
+      try {
+        // Delete the image file from Cloudinary
+        await cloudinary.v2.uploader.destroy(`category_images/${publicId}`)
+      } catch (error) {
+        console.error('Error deleting file from Cloudinary:', error)
+        throw error // Rethrow the error to handle it in the catch block
+      }
+
+      // Delete the image record from the database
+      await image.delete()
+
+      return response.status(200).json({
+        status: 'Image deleted successfully',
+      })
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while deleting the image.',
+        error: error.message,
+      })
+    }
+  }
+
+  public async uploadTagImagesCLDNRY({ params, request, response }: HttpContextContract) {
+    try {
+      const imageFiles = request.files('images')
+      const tagId = params.id
+      const tag = await Tag.findOrFail(tagId)
+
+      if (!tag) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Tag with specified id does not exist',
+        })
+      }
+
+      if (imageFiles && imageFiles.length > 0) {
+        await Promise.all(
+          imageFiles.map(async (image) => {
+            // Generate a unique file name to avoid overwriting
+            const fileName = `${new Date().getTime()}-${image.clientName}`
+
+            try {
+              // Check if image.tmpPath is defined
+              if (!image.tmpPath) {
+                throw new Error('Temporary path for the image is undefined')
+              }
+              // Upload the image to Cloudinary
+              const result = await cloudinary.v2.uploader.upload(image.tmpPath, {
+                public_id: fileName,
+                folder: 'tag_images',
+              })
+
+              // Create a new TagImage record in the database and link it to the tag
+              await TagImage.create({
+                fileName: fileName,
+                tagId: tagId,
+                imageUrl: result.secure_url,
+              })
+            } catch (error) {
+              console.error('Error uploading file:', error)
+              throw error // Rethrow the error to handle it in the catch block
+            }
+          })
+        )
+      }
+
+      // Load associated images for the tag
+      await tag.load('images')
+
+      return response.status(201).json({
+        status: 'Images uploaded successfully',
+        tag: tag,
+      })
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while uploading images.',
+        error: error.message,
+      })
+    }
+  }
+
+  public async updateTagImagesCLDNRY({ params, request, response }: HttpContextContract) {
+    try {
+      const { id } = params
+      const image = await TagImage.findOrFail(id)
+
+      if (!image) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Image with specified id does not exist',
+        })
+      }
+
+      // Parse the updated image details from the request body
+      const { fileName, description, newImage } = request.only([
+        'fileName',
+        'description',
+        'newImage',
+      ])
+
+      // If a new image is provided, upload it to Cloudinary
+      if (newImage) {
+        try {
+          // Generate a unique file name to avoid overwriting
+          const newFileName = `${new Date().getTime()}-${newImage.clientName}`
+
+          // Upload the new image to Cloudinary
+          const result = await cloudinary.v2.uploader.upload(newImage.tmpPath, {
+            public_id: newFileName,
+            folder: 'tag_images',
+          })
+
+          // Update the image URL and fileName
+          image.fileName = newFileName
+          image.imageUrl = result.secure_url
+        } catch (error) {
+          console.error('Error uploading new image:', error)
+          throw error // Rethrow the error to handle it in the catch block
+        }
+      }
+
+      // Update the image details
+      image.fileName = fileName || image.fileName
+      image.description = description || image.description
+
+      // Save the updated image record
+      await image.save()
+
+      return response.status(200).json({
+        status: 'Image updated successfully',
+        image: image,
+      })
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while updating the image.',
+        error: error.message,
+      })
+    }
+  }
+
+  public async deleteTagImagesCLDNRY({ params, response }: HttpContextContract) {
+    try {
+      const { id } = params
+      const image = await TagImage.findOrFail(id)
+
+      if (!image) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Image with specified id does not exist',
+        })
+      }
+
+      // Extract the public ID of the image from the fileName
+      const publicId = image.fileName.split('/').pop()!.split('.')[0]
+
+      try {
+        // Delete the image file from Cloudinary
+        await cloudinary.v2.uploader.destroy(`tag_images/${publicId}`)
+      } catch (error) {
+        console.error('Error deleting file from Cloudinary:', error)
+        throw error // Rethrow the error to handle it in the catch block
+      }
+
+      // Delete the image record from the database
+      await image.delete()
+
+      return response.status(200).json({
+        status: 'Image deleted successfully',
+      })
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while deleting the image.',
+        error: error.message,
+      })
+    }
+  }
 }

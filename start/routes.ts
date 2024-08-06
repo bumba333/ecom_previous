@@ -114,22 +114,27 @@ Route.group(() => {
     '/products/upload/image/variation/:id',
     'ImagesController.uploadImagesCLDNRY'
   ).middleware('auth')
-  Route.post('/products/update/image/:id', 'ImagesController.updateImages').middleware('auth')
-  Route.post('/products/delete/image/:id', 'ImagesController.deleteImages').middleware('auth')
+  Route.post('/products/update/image/:id', 'ImagesController.updateImagesCLDNRY').middleware('auth')
+  Route.post('/products/delete/image/:id', 'ImagesController.deleteImagesCLDNRY').middleware('auth')
   // Upload category images
-  Route.post('/categories/:id/images/upload', 'ImagesController.uploadCategoryImages').middleware(
+  Route.post(
+    '/categories/:id/images/upload',
+    'ImagesController.uploadCategoryImagesCLDNRY'
+  ).middleware('auth')
+
+  // Update category image details
+  Route.put('/category-images/:id', 'ImagesController.updateCategoryImagesCLDNRY').middleware(
     'auth'
   )
 
-  // Update category image details
-  Route.put('/category-images/:id', 'ImagesController.updateCategoryImages').middleware('auth')
-
   // Delete category image
-  Route.delete('/category-images/:id', 'ImagesController.deleteCategoryImages').middleware('auth')
+  Route.delete('/category-images/:id', 'ImagesController.deleteCategoryImagesCLDNRY').middleware(
+    'auth'
+  )
 
-  Route.post('tags/:id/images', 'ImagesController.uploadTagImages').middleware('auth')
-  Route.put('tag-images/:id', 'ImagesController.updateTagImages').middleware('auth')
-  Route.delete('tag-images/:id', 'ImagesController.deleteTagImages').middleware('auth')
+  Route.post('tags/:id/images', 'ImagesController.uploadTagImagesCLDNRY').middleware('auth')
+  Route.put('tag-images/:id', 'ImagesController.updateTagImagesCLDNRY').middleware('auth')
+  Route.delete('tag-images/:id', 'ImagesController.deleteTagImagesCLDNRY').middleware('auth')
 }).prefix('/api/v1')
 
 //BRANDS ROUTES
