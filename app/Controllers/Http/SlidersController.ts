@@ -195,6 +195,133 @@ export default class SliderController {
     }
   }
 
+  public async uploadImageCLDNRY({ params, request, response }: HttpContextContract) {
+    try {
+      // Handle image uploads
+      const imageFiles = request.files('images')
+      const sliderId = params.id
+      const slider = await Slider.findOrFail(sliderId)
+
+      if (!slider) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Slider with specified id does not exist',
+        })
+      }
+
+      if (imageFiles && imageFiles.length > 0) {
+        await Promise.all(
+          imageFiles.map(async (image) => {
+            // Generate a unique file name to avoid overwriting
+            const fileName = `${new Date().getTime()}-${image.clientName}`
+
+            try {
+              // Upload the image to Cloudinary
+              const result = await cloudinary.v2.uploader.upload(image.tmpPath, {
+                public_id: fileName,
+                folder: 'slider_images',
+              })
+
+              // Create a new SliderImage record in the database and link it to the slider
+              await SliderImage.create({
+                fileName: fileName,
+                sliderId: sliderId,
+                imageUrl: result.secure_url,
+              })
+            } catch (error) {
+              console.error('Error uploading file:', error)
+              throw error // Rethrow the error to handle it in the catch block
+            }
+          })
+        )
+      }
+
+      // Load associated images for the slider
+      await slider.load('images')
+
+      return response.status(201).json({
+        status: 'Slider Image uploaded successfully',
+        slider: slider,
+      })
+    } catch (error) {
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while uploading the slider image.',
+        error: error.message,
+      })
+    }
+  }
+
+  public async updateImageCLDNRY({ params, request, response }: HttpContextContract) {
+    const trx = await Database.transaction() // Start a database transaction
+    try {
+      // Handle image uploads
+      const imageFiles = request.files('images')
+      const sliderId = params.id
+      const slider = await Slider.findOrFail(sliderId, trx) // Load the slider within the transaction
+
+      if (!slider) {
+        return response.status(404).json({
+          status: 'failure',
+          message: 'Slider with specified id does not exist',
+        })
+      }
+
+      // Delete existing images associated with the slider
+      await slider.related('images').query().delete()
+
+      if (imageFiles && imageFiles.length > 0) {
+        await Promise.all(
+          imageFiles.map(async (image) => {
+            // Generate a unique file name to avoid overwriting
+            const fileName = `${new Date().getTime()}-${image.clientName}`
+            const publicId = `slider_images/${fileName}`
+
+            try {
+              // Upload the new image to Cloudinary
+              const result = await cloudinary.v2.uploader.upload(image.tmpPath, {
+                public_id: publicId,
+                folder: 'slider_images',
+              })
+
+              // Create a new SliderImage record in the database and link it to the slider
+              await SliderImage.create(
+                {
+                  fileName: fileName,
+                  sliderId: sliderId,
+                  imageUrl: result.secure_url,
+                },
+                trx // Attach the transaction context to the database operation
+              )
+            } catch (error) {
+              console.error('Error uploading file:', error)
+              await trx.rollback() // Rollback the transaction on error
+              throw error // Rethrow the error to handle it in the catch block
+            }
+          })
+        )
+      }
+
+      // Commit the transaction
+      await trx.commit()
+
+      // Reload the slider with updated images
+      await slider.load('images')
+
+      return response.status(200).json({
+        status: 'Slider Images updated successfully',
+        slider: slider,
+      })
+    } catch (error) {
+      await trx.rollback() // Rollback the transaction on error
+      return response.status(500).json({
+        status: 'Error',
+        message: 'An error occurred while updating the slider images.',
+        error: error.message,
+      })
+    }
+  }
+
   public async update({ params, request, response }: HttpContextContract) {
     const { isActive, title, description, linkType, linkId } = request.only([
       'isActive',

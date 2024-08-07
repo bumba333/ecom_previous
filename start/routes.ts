@@ -386,8 +386,8 @@ Route.group(() => {
   Route.post('/sliders', 'SlidersController.store').middleware(['auth', 'checkRole:admin'])
   Route.put('/sliders/:id', 'SlidersController.update').middleware(['auth', 'checkRole:admin'])
   Route.delete('/sliders/:id', 'SlidersController.destroy').middleware(['auth', 'checkRole:admin'])
-  Route.post('/sliders/uploadImage/:id', 'SlidersController.uploadImage').middleware('auth')
-  Route.put('sliders/:id/images', 'SlidersController.updateImage').middleware('auth')
+  Route.post('/sliders/uploadImage/:id', 'SlidersController.uploadImageCLDNRY').middleware('auth')
+  Route.put('sliders/:id/images', 'SlidersController.updateImageCLDNRY').middleware('auth')
 }).prefix('api/v1')
 
 //WALLET ROUTES
