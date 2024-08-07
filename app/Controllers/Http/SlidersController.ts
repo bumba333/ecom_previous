@@ -3,6 +3,14 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import Slider from 'App/Models/Slider'
 import SliderImage from 'App/Models/SliderImage'
 import { GCS_BUCKET_NAME, GCS_BUCKET_FOLDER, GCS_BUCKET_KEY_FILE_NAME } from 'Config/constants'
+import cloudinary from 'cloudinary'
+
+// Configure Cloudinary with your credentials
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+})
 
 export default class SliderController {
   public async index({ response }: HttpContextContract) {
@@ -217,7 +225,7 @@ export default class SliderController {
 
             try {
               // Upload the image to Cloudinary
-              const result = await cloudinary.v2.uploader.upload(image.tmpPath, {
+              const result = await cloudinary.v2.uploader.upload(image.tmpPath!, {
                 public_id: fileName,
                 folder: 'slider_images',
               })
@@ -279,7 +287,7 @@ export default class SliderController {
 
             try {
               // Upload the new image to Cloudinary
-              const result = await cloudinary.v2.uploader.upload(image.tmpPath, {
+              const result = await cloudinary.v2.uploader.upload(image.tmpPath!, {
                 public_id: publicId,
                 folder: 'slider_images',
               })
