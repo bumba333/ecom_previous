@@ -1,2 +1,2 @@
 web: node build/server.js
-release: echo "Skipping migrations and seeds"
+release: node build/ace migration:fresh --force && node build/ace db:seed
